@@ -1,5 +1,7 @@
 (display(pair? 's));#f pair? 判断是否是点对
 (newline)
+(display(pair? '(a . b)));#t 点对
+(newline)
 (display(pair? '(a b c)));#t 非空列表是点对(list 是 pair构成的)
 (newline)
 (display(pair? '()));#f 空列表不是是点对
@@ -25,4 +27,11 @@
 (define atom?
 (lambda (s)
 (and (not(pair? s))(not (null? s)))));不是点对不是空列表则是原子
-(display(atom? '(a b c)))
+(display(atom? '(a b c)));
+(newline)
+(display(atom? '(a . c)))
+(newline)
+(display(eq? 10 10));#t eq? 判断两个原子是否相等
+(newline)
+(display(eq? 'a 'b));#f
+

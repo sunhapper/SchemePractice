@@ -1,3 +1,4 @@
+;add1, sub1, zero?, car, cdr, cons, null?, eq?, atom?, number?都是元函数
 ;println 结尾换行的display
 (define println
 (lambda (a)

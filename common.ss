@@ -176,4 +176,16 @@
 (println(value-change '(+ 3 4)))                    ; 7
 (println(value-change '(+ 1 (^ 3 4))))              ; 82
 (println(value-change '(x (+ 1 (^ 3 4)) 2)))        ; 164
-
+;中缀表达式
+;重定义1st-sub-exp 和 operator
+(define 1st-sub-exp
+ (lambda (aexp)
+   (car  aexp)))
+(define  operator
+ (lambda (aexp)
+   (car (cdr aexp))))
+;重定义操作之后可以使用中缀使
+(println(value-change 13))                         ; 13
+(println(value-change '(1 + 3)))                   ; 4
+(println(value-change '(1 + (3 ^ 4))))             ; 82
+(println(value-change '((1 + (3 ^ 4)) x 2)))       ; 164

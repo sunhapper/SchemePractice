@@ -67,3 +67,18 @@
 (println(eqlist?
   '(beef ((sausage)) (and (soda)))
   '(beef ((sausage)) (and (soda))))  )       ; #t
+
+(println(equal? 'a 'a))                      ; #t
+(println(equal? 'a 'b))                      ; #f
+(println(equal? '(a) 'a))                    ; #f
+(println(equal? '(a) '(a)))                  ; #t
+(println(equal? '(a) '(b)))                  ; #f
+(println(equal? '(a) '()))                   ; #f
+(println(equal? '() '(a)))                   ; #f
+(println(equal? '(a b c) '(a b c)))          ; #t
+(println(equal? '(a (b c)) '(a (b c))))      ; #t
+(println(equal? '(a ()) '(a ())))            ; #t
+
+(println(rembers
+  '(foo (bar (baz)))
+  '(apples (foo (bar (baz))) oranges)));(apples oranges)

@@ -42,3 +42,28 @@
 
 (println(leftmost '((potato) (chips ((with) fish) (chips)))))    ; 'potato
 (println(leftmost '(((hot) (tuna (and))) cheese)))               ; 'hot
+
+(println(eqlist?
+  '(strawberry ice cream)
+  '(strawberry ice cream)) )                 ; #t
+
+(println(eqlist?
+  '(strawberry ice cream)
+  '(strawberry cream ice)) )                 ; #f
+
+(println(eqlist?
+  '(banan ((split)))
+  '((banana) split)) )                       ; #f
+
+(println(eqlist?
+  '(beef ((sausage)) (and (soda)))
+  '(beef ((salami)) (and (soda)))) )         ; #f
+
+(println(eqlist?
+  '(beef ((sausage)) (and (soda)))
+  '(beef ((sausage)) (and (soda))))  )       ; #t
+
+
+(println(eqlist?
+  '(beef ((sausage)) (and (soda)))
+  '(beef ((sausage)) (and (soda))))  )       ; #t

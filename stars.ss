@@ -83,30 +83,12 @@
         ((and (null? l1) (null? l2)) #t);都是空list
         ((or (null? l1)(null? l2)) #f);有一个不是空list
         ((and (atom? (car l1))(atom? (car l2))) ;car 都是原子
-            (and (eq? l1 l2)(eqlist? (cdr l1)(cdr l2))))
+            (and (eq? (car l1) (car l2))(eqlist? (cdr l1)(cdr l2))))
         ((or (atom? (car l1))(atom? (car l2))) #f);一个car不是原子
         (else (and 
-                ((eqlist?(car l1)(car l2)))
-                ((eqlist?(cdr l1)(cdr l2)))))
+                (eqlist?(car l1)(car l2))
+                (eqlist?(cdr l1)(cdr l2))))
 )))
-(println(eqlist?
-  '(strawberry ice cream)
-  '(strawberry ice cream)) )                 ; #t
 
-; (eqlist?
-;   '(strawberry ice cream)
-;   '(strawberry cream ice))                  ; #f
-
-; (eqlist?
-;   '(banan ((split)))
-;   '((banana) split))                        ; #f
-
-; (eqlist?
-;   '(beef ((sausage)) (and (soda)))
-;   '(beef ((salami)) (and (soda))))          ; #f
-
-; (eqlist?
-;   '(beef ((sausage)) (and (soda)))
-;   '(beef ((sausage)) (and (soda))))         ; #t
 
 

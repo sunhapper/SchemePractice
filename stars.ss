@@ -58,7 +58,7 @@
             (cons new (cons old (insertL* new old (cdr lat)))))
           (else (cons (car lat) (insertL* new old (cdr lat))))))
       (else (cons (insertL* new old (car lat))(insertL* new old (cdr lat)))))))
-;member  
+;member*  
 (define member*
  (lambda (a l)
    (cond
@@ -101,15 +101,6 @@
 
 ;rembers 接收两个参数,一个s表达式和一个列表
 (define rembers
-(lambda (s lat)
-    (cond
-        ((null? lat) '())
-        ((equal? s (car lat)) (cdr lat))
-        (else (cons (car lat)(rembers s (cdr lat))))
-)))
-
-;rembers 接收两个参数,一个s表达式和一个列表
-(define remberss
 (lambda (s lat)
     (cond
         ((null? lat) '())

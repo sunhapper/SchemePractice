@@ -250,7 +250,7 @@
             (cond
                 ((test? (car lat)) 
                  (evens-only*&co test? (cdr lat) 
-                  (lambda (newlat yes no)
+                  (lambda (newlat yes no);newlat yes no都是上一层递归的结果,匿名函数要考虑如何结合当前的结果
                    (col newlat(x yes (car lat)) no)
                   )))
                 (else 
@@ -259,18 +259,10 @@
                    (col (cons (car lat) newlat) yes (+ (car lat) no))
                   )))))
       (else 
-        (evens-only*&co test? (car lat) (lambda (al ap as)
+        (evens-only*&co test? (car lat) (lambda (al ap as);对(car lat)进行递归得到的结果是dl dp ds
             (evens-only*&co test? (cdr lat) 
-             (lambda (dl dp ds)
-              (col (cons al dl) (x ap dp)(+ as ds))
+             (lambda (dl dp ds);对(cdr lat)进行递归得到的结果是dl dp ds
+              (col (cons al dl) (x ap dp)(+ as ds));如何结合两种结果
              ))
         )))
 )))
-(evens-only*&co 
-  uneven?
-  '((9 1 2 8) 3 10 ((9 9) 7 6) 2)
-  colImp);((2 8) 10 (() 6) 2)15309 28
-(evens-only*&co 
-  even?
-  '((9 1 2 8) 3 10 ((9 9) 7 6) 2)
-  colImp);((9 1) 3 ((9 9) 7))1920 38

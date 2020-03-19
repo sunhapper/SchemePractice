@@ -1,4 +1,5 @@
 (include "common.ss")
+;entry 是由 list 组成的 pair ， pair 的第一个 list 是 set 。另外，两个 list 的长度必须是相同的
 (define build
   (lambda (s1 s2)
     (cons s1 (cons s2 '()))))
@@ -50,6 +51,8 @@
 ; *lambda : (lambda (x y) (cons x y))
 ; *cond : (cond(nothing (quote something))(else (quote nothing)))
 ; *application  : ((lambda (nothing)(cond(nothing (quote something))(else (quote nothing))))#t)    
+
+
 (define atom-to-action
   (lambda (e)
     (cond
@@ -77,6 +80,7 @@
          ((eq? (car e) (quote cond)) *cond)
          (else *application)))
       (else *application))))
+;s-表达式的类型
 (define expression-to-action
   (lambda (e)
     (cond
@@ -86,6 +90,8 @@
   (lambda (e)
     (meaning e (quote ()))))
 
+;table用来存储数据
+;执行action
 (define meaning
   (lambda (e table)
     ((expression-to-action e) e table)))           
@@ -97,10 +103,12 @@
       ((eq? e #t) #t)
       ((eq? e #f) #f)
       (else (build 'primitive e))))) 
+;只能识别出(quote xxx),不能识别出'
 (define *quote
   (lambda (e table)
     (text-of e)))
 (define text-of second)
+;标识符,在table中查找标识符对应的元素 ,如果e为空则抛异常
 (define *identifier
   (lambda (e table)
     (lookup-in-table e table initial-table)))
@@ -108,17 +116,21 @@
 (define initial-table
   (lambda (name)
     (car (quote ()))))
-
 (define *lambda
   (lambda (e table)
     (build (quote non-primitive)
       (cons table (cdr e)))))
+
 (define table-of first)
 (define formals-of second)
 (define body-of third)
+
 (define evcon
   (lambda (lines table)
     (cond
+      ;是else 执行答案
+      ;是问题 执行判断问题的值,为#t再执行答案
+      ;否则取lines的cdr进行递归 因为car lines不会被执行了
      ((else? (question-of (car lines)))
       (meaning (answer-of (car lines))
                table))
@@ -140,6 +152,7 @@
 (define *cond
   (lambda (e table)
     (evcon (cond-lines-of e) table)))
+(define cond-lines-of cdr)
 
 (define evlis
   (lambda (args table)
@@ -173,7 +186,6 @@
        (apply-primitive (second fun) vals))
       ((non-primitive? fun)
        (apply-closure (second fun) vals)))))
-
 (define apply-primitive
   (lambda (name vals)
     (cond
@@ -215,3 +227,4 @@
                       (formals-of closure)
                       vals)
                     (table-of closure)))))
+

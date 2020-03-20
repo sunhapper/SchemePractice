@@ -223,8 +223,71 @@
   (lambda (closure vals)
     (meaning
       (body-of closure)
-      (extend-table (new-entry
+      (extend-table ;table用来保存多个lambda的参数
+                    (new-entry;new-entry将lambda的形参和实参绑定,构成一个entry
                       (formals-of closure)
                       vals)
                     (table-of closure)))))
+(value '(add1 6))                           ; 7
+(value '(quote (a b c)))                    ; '(a b c)
+(value '(car (quote (a b c))))              ; 'a
+(value '(cdr (quote (a b c))))              ; '(b c)
+(value
+  '((lambda (x)
+      (cons x (quote ())))
+    (quote (foo bar baz))))                 ; '((foo bar baz))
+;(meaning e '()))
+;((expression-to-action e) e '())
+;((list-to-action e)e '())
+;list-to-action e -> *application
+;*application e '()
+;(apply(meaning (function-of e) '())(evlis (arguments-of e) '()))
+;分
+;(meaning (function-of e) '())
+;(meaning (lambda (x)(cons x (quote ()))) '())
+;(*lambda (lambda (x)(cons x (quote ()))) '())
+;(non-primitive  ((quote ()) (x) (cons x (quote ()))))
+;合
+;(apply(non-primitive  ((quote ()) (x) (cons x (quote ()))))(evlis (arguments-of e) table))
+;分
+;(evlis (arguments-of e) table)
+;(evlis ((quote (foo bar baz))) '())
+;(cons (meaning (car args) '())'())
+;(cons (meaning (quote (foo bar baz)) '())'())
+;(cons (*quote (quote (foo bar baz)) '()) '())
+;(cons (foo bar baz) '())
+;((foo bar baz))
+; 合
+; (apply(non-primitive  ((quote ()) (x) (cons x (quote ()))))((foo bar baz)))
+; (apply-closure  ((quote ()) (x) (cons x (quote ()))) ((foo bar baz)))
+; (meaning (cons x (quote ())) (extend-table(new-entry (x) ((foo bar baz)))'()))
+; (meaning (cons x (quote ())) (extend-table ((x) ((foo bar baz)))'()))
+; (meaning (cons x (quote ())) (((x) ((foo bar baz)))))
+; (meaning (x) (((x) ((foo bar baz)))))
+; (*identifier (x) (((x) ((foo bar baz)))))
+; (lookup-in-table (x) (((x) ((foo bar baz)))) initial-table)
+; (lookup-in-entry (x) ((x) ((foo bar baz))) initial-table)
+; (foo bar baz)
 
+(value
+  '((lambda (x)
+      (cond
+        (x (quote true))
+        (else
+          (quote false))))
+    #t)) 
+;(meaning e '()))
+;(*application e '())
+;(apply(meaning (lambda (x)(cond(x  'true)(else  'false))) '()) (#t))
+;(apply (*lambda (lambda (x)(cond(x  'true)(else  'false))) '()) (#t))
+;(apply ('non-primitive ('() (x)(cond(x  'true)(else  'false)))) (#t))
+;(apply-closure ('() (x)(cond(x  'true)(else  'false))) (#t))
+;(apply-closure ('() (x)(cond(x  'true)(else  'false))) (#t))
+;(meaning (cond(x  'true)(else  'false)) (((x)((#t)))))
+;(*cond (cond(x  'true)(else  'false)) (((x)((#t)))))
+; evcon 参数为多个q-a pair
+;(evcon ((x  'true)(else  'false)) (((x)((#t)))))
+;先询问else作为终止条件 ,再询问第一个q,递归evcon问下一个问题
+;(cond ((meaning x) (meaning 'true)))
+;(cond (#t 'true))
+;'true

@@ -23,7 +23,7 @@
         0
         y))
 (test 0 (p));应用序会一直求(p),陷入无限循环;正则序可以返回(p)
-;牛顿迭代法
+;牛顿迭代法求平方根
 (define (sqrt-iter guess x)
     (if (good-enough? guess x)
             guess
@@ -47,7 +47,7 @@
             guess
             (sqrt-iter (improve guess x)
                         x)))
-;使用if和cond都不会对为false的分支进行求值
+;使用if和cond都不会对不用访问的分支进行求值
 (define (sqrt-iter guess x)
     (cond
       ((good-enough? guess x) guess)
@@ -61,3 +61,12 @@
     (> 0.01
        (/ (abs (- new-guess old-guess))
           old-guess)))
+;1.8 牛顿迭代法求立方根  
+(define (cube-roots-iter guess x)
+    (if (good-enough? guess (improve guess x))
+        guess
+        (cube-roots-iter (improve-cube guess x) x)))
+(define (improve-cube guess x)
+    (/ (+ (/ x (square guess))(* 2 guess)) 3))
+(define (cube-roots x)
+    (cube-roots-iter 1.0 x))

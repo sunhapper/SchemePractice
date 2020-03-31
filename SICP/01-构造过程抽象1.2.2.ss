@@ -34,3 +34,23 @@
         ))
 (define (fun-f n)
     (fun-f-iter 0 1 2 0 n))
+;1.12
+;递归
+(define (pascal row col)
+    (cond
+        ((= col 0) 1) 
+        ((= col row) 1)
+        (else (+(pascal (- row 1) col)(pascal (- row 1)(- col 1))))))
+;迭代,根据pascal(row col)=row!/(col!*(row-col)!)
+;计算阶乘
+(define (factorial n)
+    (define (factorial-iter n sum)
+        (cond
+            ((= n 0) sum)
+            (else (factorial-iter (- n 1) (* n sum)))))
+    (factorial-iter n 1))
+(define (pascal row col)
+    (/ (factorial row)
+       (* (factorial col)
+          (factorial (- row col)))))
+(pascal 1024 256)

@@ -30,3 +30,28 @@
             (else (fast-expt-iter b (- n 1) (* sum b) ))))
     (fast-expt-iter b n 1))
 (fast-expt 3 7)
+;用+实现*
+(define (double x)
+    (* 2 x))
+(define (halve x)
+    (/ x 2))
+(define (multiply a b)
+    (if (= b 0)
+        0
+        (+ a (multiply a (- b 1)))))
+;1.17
+(define (fast-multiply a b)
+    (cond
+        ((= b 0) 0)
+        ((even? b) (fast-multiply (double a) (halve b)))
+        (else (+ a (fast-multiply a (- b 1))))
+        ))
+;1.18迭代
+(define (fast-multiply a b)
+    (define (fast-multiply-iter a b sum)
+        (cond
+            ((= b 0) sum)
+            ((even? b) (fast-multiply-iter (double a) (halve b) sum))
+            (else (fast-multiply-iter a (- b 1) (+ sum a)) )
+            ))
+    (fast-multiply-iter a b 0))

@@ -55,3 +55,37 @@
             (else (fast-multiply-iter a (- b 1) (+ sum a)) )
             ))
     (fast-multiply-iter a b 0))
+;斐波那契数列的递归
+(define (fib n)
+    (cond
+        ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))(fib (- n 2))))
+    ))
+;斐波那契数列的迭代
+(define (fib n)
+    (define (fib-iter a b n)
+        (if (= n 0)
+            a
+            (fib-iter b (+ a b) (- n 1))))
+    (fib-iter 0 1 n))
+;斐波那契数列的logn解法
+;https://sicp.readthedocs.io/en/latest/chp1/19.html
+(define (fib-fast n)
+    (fib-iter 1 0 0 1 n))
+
+(define (fib-iter a b p q n)
+    (cond ((= n 0)
+            b)
+          ((even? n)
+            (fib-iter a 
+                      b
+                      (+ (square p) (square q))     ; 计算 p'
+                      (+ (* 2 p q) (square q))      ; 计算 q'
+                      (/ n 2)))
+          (else
+            (fib-iter (+ (* b q) (* a q) (* a p))
+                      (+ (* b p) (* a q))
+                      p
+                      q
+                      (- n 1)))))

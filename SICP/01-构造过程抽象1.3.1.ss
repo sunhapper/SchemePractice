@@ -30,4 +30,30 @@
 )
 (define (cube x)
   (* x x))
-(display(sum-simpson 0 1 10000000 cube))
+(sum-simpson 0 1 100 cube)
+
+;1.31 product 递归 
+(define (product a b term next)
+  (if (> a b)
+    1
+    (*(term a)(product (next a) b term next))
+  ))
+;迭代
+(define (product a b term next)
+  (define (iter a result)
+    (if (> a b)
+      result
+      (iter (next a) (* (term a) result))))
+  (iter a 1))
+(define (factorial n)
+  (product 1 n (lambda(x)x)(lambda(x)(+ x 1))))
+(display (factorial 10))
+(define (pi end)
+  (define (term a)
+    (if (even? a)
+      (/ a (+ a 1))
+      (/ (+ a 1) a)))
+  (define (next a)
+    (+ a 1))
+  (* (product 2 end term next) 4))
+(pi 100)

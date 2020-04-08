@@ -47,7 +47,7 @@
   (iter a 1))
 (define (factorial n)
   (product 1 n (lambda(x)x)(lambda(x)(+ x 1))))
-(display (factorial 10))
+(factorial 10)
 (define (pi end)
   (define (term a)
     (if (even? a)
@@ -90,3 +90,32 @@
                 a
                 next
                 b))
+;1.33 filtered-accumulate  迭代
+(define (filtered-accumulate filter combiner null-value term a next b)
+  (define (iter a result)
+    (cond
+      ((> a b) result)
+      ((filter a) (iter (next a) (combiner (term a) result)))
+      (else (iter (next a) result))
+    ))
+(iter a null-value))
+;递归版
+(define (filtered-accumulate filter combiner null-value term a next b)
+    (if (> a b)
+        null-value
+        (let ((rest-terms (filtered-accumulate filter combiner
+                                               null-value
+                                               term
+                                               (next a)
+                                               next
+                                               b
+                                                )))
+            (if (filter a)
+                (combiner (term a) rest-terms)
+                rest-terms))))
+(display(filtered-accumulate even? +                ; 2 + 4 + 6 + 8 + 10 = 30
+               0
+               (lambda (x) x)
+               1
+               (lambda (i) (+ i 1))
+               10))

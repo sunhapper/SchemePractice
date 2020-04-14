@@ -26,8 +26,6 @@
 (define (fixed-point f first-guess)
   (define (try guess)
     (let ([next (f guess)])
-      (display next)
-      (newline)
       (if (close-enough? guess next)
         next
         (try next))))
@@ -39,11 +37,26 @@
   (fixed-point (lambda (y)(/ x y)) 1.0));此搜寻是不收敛的
 ;为了使x/y不至于远离y,可以使用y和x/y的平均值作为下一个猜测值,这种技术叫平均阻尼
 ;y=x/y y+y=x/y+y y=1/2(y+x/y)
+;平均阻尼 一个接收函数返回函数的高阶函数
+(define (average-damp f)
+    (lambda (x)
+        (average x 
+                 (f x))))
 (define (sqrt x)
-  (fixed-point (lambda (y)(average y (/ x y))) 1.0))
+  (fixed-point (average-damp (lambda (y)(/ x y))) 1.0))
 (sqrt 10);3.162277665175675
 
 ;黄金分割
 (fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.0);1.6181818181818182 x/1=1/(x-1)
 (fixed-point (lambda (x) (/ 1 (+ 1 x)))1.0);0.6181818181818182 1/x=x/1-x
-
+(define (fixed-point f first-guess)
+  (define (try guess)
+    (let ([next (f guess)])
+      (display next)
+      (newline)
+      (if (close-enough? guess next)
+        next
+        (try next))))
+  (try first-guess))
+(fixed-point (lambda (x) (/ (log 1000)(log x)))2.0);4.555870396702851 22次
+(fixed-point (average-damp (lambda (x) (/ (log 1000)(log x)))) 2.0);4.555870396702851 7次

@@ -26,6 +26,8 @@
 (define (fixed-point f first-guess)
   (define (try guess)
     (let ([next (f guess)])
+      (display next)
+      (newline)
       (if (close-enough? guess next)
         next
         (try next))))
@@ -41,4 +43,7 @@
   (fixed-point (lambda (y)(average y (/ x y))) 1.0))
 (sqrt 10);3.162277665175675
 
+;黄金分割
+(fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.0);1.6181818181818182 x/1=1/(x-1)
+(fixed-point (lambda (x) (/ 1 (+ 1 x)))1.0);0.6181818181818182 1/x=x/1-x
 

@@ -80,4 +80,24 @@
        (cont-frac (lambda (i) 1.0)
                   (lambda (i) 1.0)
                   k)))
-(display(golden-ratio 10));1.6179775280898876
+(golden-ratio 10);1.6179775280898876
+;欧拉展开式
+(define (e k)
+    (define (N i) 1)
+    (define (D i)
+        (if (= 0 (remainder (+ i 1) 3))
+            (* 2 (/ (+ i 1) 3))
+            1))
+    (+ 2.0 
+       (cont-frac N D k)))
+(display(e 10));2.7182817182817183
+;tan x
+(define (tan-cf x k)
+  (define (D i) (- (* i 2) 1))
+  (define (N i) 
+    (if (= i 1)
+      x
+      (-(* x x))))
+  (exact->inexact(cont-frac N D k)))
+(tan 10);0.6483608274590867
+(display (tan-cf 10 100));0.6483608274590866

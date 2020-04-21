@@ -60,3 +60,24 @@
   (try first-guess))
 (fixed-point (lambda (x) (/ (log 1000)(log x)))2.0);4.555870396702851 22次
 (fixed-point (average-damp (lambda (x) (/ (log 1000)(log x)))) 2.0);4.555870396702851 7次
+;无穷连分式 递归版本
+(define (cont-frac n d k)
+  (define (cf i)
+    (if (= i k)
+      (/ (n k) (d k))
+      (/(n i)(+(d i)(cf (+ i 1))))))
+  (cf 1))
+;迭代版本
+(define (cont-frac n d k)
+  (define (iter i result)
+    (if (= i 0)
+      result
+      (iter (- i 1)(/ (n i)(+ (d i) result)))
+    ))
+  (iter (- k 1)(/(n k)(d k))))
+(define (golden-ratio k)
+    (+ 1
+       (cont-frac (lambda (i) 1.0)
+                  (lambda (i) 1.0)
+                  k)))
+(display(golden-ratio 10));1.6179775280898876
